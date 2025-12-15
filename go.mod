@@ -1,4 +1,4 @@
-module github.com/nhdfr/sturl
+module github.com/nhdfr/tabby
 
 go 1.25.5
 
