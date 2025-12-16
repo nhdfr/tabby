@@ -2,35 +2,52 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
 
-// postCmd represents the post command
-var postCmd = &cobra.Command{
-	Use:   "post ",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+var (
+	postData        string
+	postContentType string
+)
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+var postCmd = &cobra.Command{
+	Use:   "post [url]",
+	Short: "tabby post <url> -d <data> -H <header>",
+	Long:  ``,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("post called")
+		url := args[0]
+
+		curlArgs := []string{"-s", "-X", "POST"}
+
+		if postContentType != "" {
+			curlArgs = append(curlArgs, "-H", fmt.Sprintf("Content-Type: %s", postContentType))
+		}
+
+		if postData != "" {
+			curlArgs = append(curlArgs, "-d", postData)
+		}
+
+		curlArgs = append(curlArgs, url)
+
+		curlCmd := exec.Command("curl", curlArgs...)
+		curlCmd.Stdout = os.Stdout
+		curlCmd.Stderr = os.Stderr
+
+		err := curlCmd.Run()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error executing curl: %v\n", err)
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(postCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// postCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// postCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	postCmd.Flags().StringVarP(&postData, "data", "d", "", "Data to send in POST request")
+	postCmd.Flags().StringVarP(&postContentType, "content-type", "H", "application/json", "Content-Type header")
 }
