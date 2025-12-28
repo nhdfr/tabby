@@ -22,6 +22,10 @@ var (
 	errorStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FF0000")).
 			Bold(true)
+
+	headerStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#FFB86C"))
 )
 
 func Run() {
@@ -35,6 +39,7 @@ func Run() {
 				Title("Choose HTTP Method").
 				Options(
 					huh.NewOption("GET Request", "get"),
+					huh.NewOption("POST Request", "post"),
 				).
 				Value(&method),
 		),
@@ -49,6 +54,8 @@ func Run() {
 	switch method {
 	case "get":
 		handleGet()
+	case "post":
+		handlePost()
 	default:
 		fmt.Println(errorStyle.Render("Invalid method selected"))
 		os.Exit(1)
