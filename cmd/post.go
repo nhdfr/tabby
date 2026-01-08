@@ -189,7 +189,7 @@ Supports random data generation using templates with placeholders:
 		}
 
 		if postLoop {
-			fmt.Printf("\n✓ Completed %d requests\n", count)
+			fmt.Printf("\n Completed %d requests\n", count)
 		}
 	},
 }
