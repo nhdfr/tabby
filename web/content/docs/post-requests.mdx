@@ -1,0 +1,59 @@
+---
+title: POST Requests
+description: Making POST requests with Tabby
+---
+
+# POST Requests
+
+## Basic POST Request
+
+```bash
+tabby post https://api.example.com/users -b '{"name": "John"}'
+```
+
+## With Template Placeholders
+
+Use dynamic data generation:
+
+```bash
+tabby post https://api.example.com/users -b '{"name": "{{name}}", "email": "{{email}}"}'
+```
+
+Each request will generate unique values for `name` and `email`.
+
+## Using a Template File
+
+Create a JSON template file:
+
+```json title="template.json"
+{
+  "name": "{{name}}",
+  "email": "{{email}}",
+  "id": "{{uuid}}"
+}
+```
+
+Then use it:
+
+```bash
+tabby post https://api.example.com/users -t template.json
+```
+
+## With Headers
+
+```bash
+tabby post https://api.example.com/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer token123" \
+  -b '{"name": "{{name}}"}'
+```
+
+## Loop Mode for Stress Testing
+
+Create multiple users:
+
+```bash
+tabby post https://api.example.com/users -b '{"name": "{{name}}"}' -l 100
+```
+
+This will make 100 POST requests, each with a unique generated name.

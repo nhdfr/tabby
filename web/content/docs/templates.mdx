@@ -1,0 +1,70 @@
+---
+title: Templates
+description: Using template placeholders for dynamic data generation
+---
+
+# Templates
+
+Tabby supports template placeholders that generate dynamic data for each request.
+
+## Available Placeholders
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `{{name}}` | Random full name | John Smith |
+| `{{firstName}}` | Random first name | John |
+| `{{lastName}}` | Random last name | Smith |
+| `{{email}}` | Random email address | john.smith@example.com |
+| `{{uuid}}` | Random UUID v4 | 550e8400-e29b-41d4-a716-446655440000 |
+| `{{phone}}` | Random phone number | +1-555-123-4567 |
+| `{{int}}` | Random integer | 42 |
+| `{{float}}` | Random float | 3.14159 |
+| `{{bool}}` | Random boolean | true |
+| `{{date}}` | Random date | 2024-01-15 |
+| `{{timestamp}}` | Current timestamp | 1705312800 |
+
+## Inline Templates
+
+Use placeholders directly in the request body:
+
+```bash
+tabby post https://api.example.com/users -b '{
+  "name": "{{name}}",
+  "email": "{{email}}",
+  "id": "{{uuid}}"
+}'
+```
+
+## Template Files
+
+Create a JSON file with placeholders:
+
+```json title="user-template.json"
+{
+  "user": {
+    "name": "{{name}}",
+    "email": "{{email}}",
+    "phone": "{{phone}}"
+  },
+  "metadata": {
+    "id": "{{uuid}}",
+    "createdAt": "{{timestamp}}"
+  }
+}
+```
+
+Use the template file:
+
+```bash
+tabby post https://api.example.com/users -t user-template.json
+```
+
+## Combined with Loop Mode
+
+Generate 50 unique users:
+
+```bash
+tabby post https://api.example.com/users -t user-template.json -l 50
+```
+
+Each of the 50 requests will have completely different generated values.

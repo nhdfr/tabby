@@ -1,0 +1,13 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "---Getting Started---",
+    "index",
+    "installation",
+    "---Usage---",
+    "get-requests",
+    "post-requests",
+    "templates",
+    "loop-mode"
+  ]
+}

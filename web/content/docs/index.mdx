@@ -1,0 +1,46 @@
+---
+title: Introduction
+description: Get started with Tabby - a powerful terminal-based HTTP testing tool
+---
+
+# Welcome to Tabby
+
+Tabby is a powerful terminal-based HTTP testing tool with automated data generation, loop mode for stress testing, and template support. Think of it as curl, but better.
+
+## Features
+
+- **Template Placeholders** - Use `{{name}}`, `{{email}}`, `{{uuid}}` and more for dynamic data
+- **Loop Mode** - Run requests multiple times for stress testing
+- **JSON Support** - First-class JSON body support with template files
+- **Simple CLI** - Intuitive command-line interface
+
+## Quick Start
+
+### Installation
+
+```bash
+go install github.com/nhdfr/tabby@latest
+```
+
+### Basic Usage
+
+Make a simple GET request:
+
+```bash
+tabby get https://api.example.com/users
+```
+
+Make a POST request with JSON body:
+
+```bash
+tabby post https://api.example.com/users -b '{"name": "{{name}}", "email": "{{email}}"}'
+```
+
+## What's Next?
+
+<Cards>
+  <Card title="Installation" href="/docs/installation" />
+  <Card title="GET Requests" href="/docs/get-requests" />
+  <Card title="POST Requests" href="/docs/post-requests" />
+  <Card title="Templates" href="/docs/templates" />
+</Cards>

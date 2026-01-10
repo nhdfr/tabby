@@ -1,0 +1,44 @@
+---
+title: Installation
+description: How to install Tabby on your system
+---
+
+# Installation
+
+## Prerequisites
+
+- Go 1.21 or higher
+
+## Using Go Install
+
+The easiest way to install Tabby is using `go install`:
+
+```bash
+go install github.com/nhdfr/tabby@latest
+```
+
+Make sure your Go bin directory is in your PATH:
+
+```bash
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+## Building from Source
+
+Clone the repository and build:
+
+```bash
+git clone https://github.com/nhdfr/tabby.git
+cd tabby
+go build -o tabby .
+```
+
+## Verify Installation
+
+Check that Tabby is installed correctly:
+
+```bash
+tabby --help
+```
+
+You should see the help output with available commands.

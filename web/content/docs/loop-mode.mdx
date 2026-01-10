@@ -1,0 +1,51 @@
+---
+title: Loop Mode
+description: Running multiple requests for stress testing
+---
+
+# Loop Mode
+
+Loop mode allows you to run the same request multiple times, perfect for stress testing APIs or generating bulk data.
+
+## Basic Usage
+
+Run a request 10 times:
+
+```bash
+tabby get https://api.example.com/health -l 10
+```
+
+## With Dynamic Data
+
+Each iteration generates new placeholder values:
+
+```bash
+tabby post https://api.example.com/users -b '{"name": "{{name}}"}' -l 100
+```
+
+This creates 100 different users, each with a unique name.
+
+## Stress Testing
+
+Test API performance under load:
+
+```bash
+tabby get https://api.example.com/users -l 1000
+```
+
+## Output Summary
+
+After loop mode completes, Tabby shows:
+
+- Total requests made
+- Successful responses
+- Failed responses
+- Average response time
+- Min/Max response times
+
+## Best Practices
+
+1. **Start small** - Begin with `-l 10` to verify everything works
+2. **Monitor the API** - Check server logs during stress tests
+3. **Use rate limiting** - Some APIs may throttle or block rapid requests
+4. **Template variety** - Use placeholders to generate realistic varied data

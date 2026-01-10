@@ -1,0 +1,46 @@
+---
+title: GET Requests
+description: Making GET requests with Tabby
+---
+
+# GET Requests
+
+## Basic GET Request
+
+```bash
+tabby get https://api.example.com/users
+```
+
+## With Headers
+
+Add custom headers using the `-H` flag:
+
+```bash
+tabby get https://api.example.com/users -H "Authorization: Bearer token123"
+```
+
+## Multiple Headers
+
+```bash
+tabby get https://api.example.com/users \
+  -H "Authorization: Bearer token123" \
+  -H "Accept: application/json"
+```
+
+## Query Parameters
+
+You can include query parameters directly in the URL:
+
+```bash
+tabby get "https://api.example.com/users?page=1&limit=10"
+```
+
+## With Loop Mode
+
+Run the same request multiple times:
+
+```bash
+tabby get https://api.example.com/users -l 10
+```
+
+This will make 10 GET requests to the endpoint.
