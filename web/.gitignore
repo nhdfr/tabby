@@ -10,6 +10,10 @@
 !.yarn/releases
 !.yarn/versions
 
+# pnpm
+.pnpm-store/
+.pnpm-debug.log*
+
 # testing
 /coverage
 
@@ -28,10 +32,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +43,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated content
+.source
+next-env.d.ts
+
+# next-sitemap
+/public/robots.txt
+/public/sitemap*.xml
+Session.vim
+

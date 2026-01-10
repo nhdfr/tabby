@@ -55,7 +55,7 @@ Supports random data generation using templates with placeholders:
 				os.Exit(1)
 			}
 		} else {
-			intervalDuration = 1 * time.Second 
+			intervalDuration = 1 * time.Second
 		}
 
 		requestCount := 1
