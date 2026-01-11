@@ -1,0 +1,17 @@
+*.go linguist-detectable=true
+
+pnpm-lock.yaml linguist-generated
+web/pnpm-lock.yaml linguist-generated
+*.lock linguist-generated
+
+web/*.config.js linguist-generated
+web/*.config.cjs linguist-generated
+web/*.config.ts linguist-generated
+web/tsconfig.json linguist-generated
+web/components.json linguist-generated
+web/biome.jsonc linguist-generated
+web/postcss.config.js linguist-generated
+
+web/content/** linguist-documentation
+
+web/src/styles/** linguist-generated
