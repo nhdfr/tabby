@@ -1,0 +1,53 @@
+# GoReleaser configuration for tabby
+# Documentation: https://goreleaser.com
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: tabby
+    main: ./main.go
+    binary: tabby
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/nhdfr/tabby/cmd.Version={{.Version}}
+
+archives:
+  - id: tabby
+    builds:
+      - tabby
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+release:
+  github:
+    owner: nhdfr
+    name: tabby
+  draft: false
+  prerelease: auto

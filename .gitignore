@@ -4,3 +4,8 @@ test
 *.test
 test.go
 .env
+
+# Binary
+tabby
+tabby.exe
+dist/

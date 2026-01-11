@@ -6,9 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "0.1.1"
+
 var rootCmd = &cobra.Command{
-	Use:   "tabby",
-	Short: "A powerful terminal-based HTTP testing and stress testing tool",
+	Use:     "tabby",
+	Short:   "A powerful terminal-based HTTP testing and stress testing tool",
+	Version: Version,
 	Long: `Tabby is a terminal-based HTTP testing and stress testing tool with automated data generation capabilities.
 
 Features:
