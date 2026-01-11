@@ -92,6 +92,10 @@ func (g *Generator) generateValue(placeholderType string, params []string) (stri
 		return g.randomPhone(), nil
 	case "number", "int":
 		return g.randomNumber(params), nil
+	case "float", "decimal":
+		return g.randomFloat(params), nil
+	case "price":
+		return g.randomPrice(params), nil
 	case "text", "paragraph":
 		return g.randomParagraph(), nil
 	case "sentence":
@@ -154,6 +158,58 @@ func (g *Generator) randomNumber(params []string) string {
 	}
 
 	return strconv.Itoa(g.secureRandomInt(max-min) + min)
+}
+
+func (g *Generator) randomFloat(params []string) string {
+	min, max := 0.0, 100.0
+	decimals := 2
+
+	if len(params) >= 1 {
+		if val, err := strconv.ParseFloat(params[0], 64); err == nil {
+			min = val
+		}
+	}
+	if len(params) >= 2 {
+		if val, err := strconv.ParseFloat(params[1], 64); err == nil {
+			max = val
+		}
+	}
+	if len(params) >= 3 {
+		if val, err := strconv.Atoi(params[2]); err == nil {
+			decimals = val
+		}
+	}
+
+	if max <= min {
+		max = min + 1
+	}
+
+	randFraction := float64(g.secureRandomInt(10000)) / 10000.0
+	value := min + randFraction*(max-min)
+
+	return strconv.FormatFloat(value, 'f', decimals, 64)
+}
+
+func (g *Generator) randomPrice(params []string) string {
+	min, max := 1.0, 100.0
+
+	if len(params) >= 1 {
+		if val, err := strconv.ParseFloat(params[0], 64); err == nil {
+			min = val
+		}
+	}
+	if len(params) >= 2 {
+		if val, err := strconv.ParseFloat(params[1], 64); err == nil {
+			max = val
+		}
+	}
+
+	if max <= min {
+		max = min + 1
+	}
+
+	wholeNumber := g.secureRandomInt(int(max-min)) + int(min)
+	return fmt.Sprintf("%d.99", wholeNumber)
 }
 
 func (g *Generator) randomParagraph() string {

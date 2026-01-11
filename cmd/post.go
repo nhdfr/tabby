@@ -30,18 +30,26 @@ var postCmd = &cobra.Command{
 	Long: `Make a POST request to the specified URL with optional data and headers.
 	
 Supports random data generation using templates with placeholders:
-  {{name}}       - Random full name
-  {{firstname}}  - Random first name
-  {{lastname}}   - Random last name
-  {{email}}      - Random email address
-  {{phone}}      - Random phone number
-  {{number}}     - Random number (1-100)
-  {{number:1:50}} - Random number with range
-  {{text}}       - Random paragraph
-  {{sentence}}   - Random sentence
-  {{uuid}}       - Random UUID
-  {{bool}}       - Random boolean
-  {{date}}       - Random date`,
+  {{name}}          - Random full name
+  {{firstname}}     - Random first name
+  {{lastname}}      - Random last name
+  {{email}}         - Random email address
+  {{phone}}         - Random phone number
+  {{number}}        - Random number (1-100)
+  {{number:1:50}}   - Random number with range
+  {{float}}         - Random float (0-100, 2 decimals)
+  {{float:1:50:3}}  - Random float with range and decimal places
+  {{price}}         - Random price ending in .99 (1-100)
+  {{price:5:50}}    - Random price with range
+  {{text}}          - Random paragraph
+  {{sentence}}      - Random sentence
+  {{uuid}}          - Random UUID
+  {{bool}}          - Random boolean
+  {{date}}          - Random date
+
+Note: For numeric JSON fields, don't wrap placeholders in quotes:
+  ✓ "price": {{price}}
+  ✗ "price": "{{price}}"`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0]
@@ -108,9 +116,7 @@ Supports random data generation using templates with placeholders:
 				os.Exit(1)
 			}
 
-			if postContentType != "" {
-				req.Header.Set("Content-Type", postContentType)
-			}
+			req.Header.Set("Content-Type", postContentType)
 
 			for _, header := range postHeaders {
 				parts := strings.SplitN(header, ":", 2)

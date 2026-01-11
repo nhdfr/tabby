@@ -3,4 +3,4 @@ test-template.json
 test
 *.test
 test.go
-tabby
+.env
