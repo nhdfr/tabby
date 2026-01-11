@@ -1,0 +1,24 @@
+{
+  "name": "Tabby - API Stress Testing Made Simple",
+  "short_name": "Tabby",
+  "description": "A powerful terminal-based HTTP testing tool with automated data generation, loop mode for stress testing, and template support.",
+  "icons": [
+    {
+      "src": "/images/tabby-icon.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/tabby.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#BFA573",
+  "background_color": "#0A0A0A",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}

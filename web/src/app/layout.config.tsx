@@ -9,7 +9,7 @@ export const owner = 'Tabby';
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title,
+    title: <span style={{ color: '#BFA573' }}>{title}</span>,
   },
 };
 
