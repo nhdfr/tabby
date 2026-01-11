@@ -201,16 +201,14 @@ export function Playground() {
       if (f.key.trim()) {
         const isPlaceholder = f.value.startsWith("{{") && f.value.endsWith("}}");
         if (f.type === "number") {
-          // For number type: use placeholder as-is (will be unquoted) or parse as number
           if (isPlaceholder) {
-            obj[f.key] = f.value; // Will be handled specially in JSON output
+            obj[f.key] = f.value;
           } else {
             obj[f.key] = Number(f.value) || 0;
           }
         } else if (f.type === "boolean") {
-          // For boolean type: use placeholder as-is or parse as boolean
           if (isPlaceholder) {
-            obj[f.key] = f.value; // Will be handled specially in JSON output
+            obj[f.key] = f.value;
           } else {
             obj[f.key] = f.value === "true";
           }
@@ -220,15 +218,12 @@ export function Playground() {
       }
     });
     
-    // Custom stringify to handle unquoted placeholders for number/boolean fields
     const jsonStr = JSON.stringify(obj, null, 2);
-    // Replace quoted placeholders with unquoted ones for number/boolean types
     let result = jsonStr;
     formFields.forEach((f) => {
       if (f.key.trim() && (f.type === "number" || f.type === "boolean")) {
         const isPlaceholder = f.value.startsWith("{{") && f.value.endsWith("}}");
         if (isPlaceholder) {
-          // Replace "{{placeholder}}" with {{placeholder}} (remove quotes)
           result = result.replace(`"${f.value}"`, f.value);
         }
       }
@@ -246,13 +241,19 @@ export function Playground() {
     if (method === "POST" && effectiveBody.trim()) {
       const compact = effectiveBody.replace(/\n/g, " ").replace(/\s+/g, " ");
       parts.push(`\\\n  -d '${compact}'`);
-      // Only add content-type if it's not the default (application/json)
       if (contentType !== "application/json") {
         parts.push(`\\\n  -H "${contentType}"`);
       }
     }
     if (loopEnabled) {
-      parts.push(`\\\n  --loop --count ${loopCount} --interval ${interval}`);
+      let loopPart = `\\\n  --loop`;
+      if (loopCount !== "0" && loopCount !== "") {
+        loopPart += ` --count ${loopCount}`;
+      }
+      if (interval !== "0" && interval !== "0s" && interval !== "") {
+        loopPart += ` --interval ${interval}`;
+      }
+      parts.push(loopPart);
     }
     return parts.join(" ");
   }, [
