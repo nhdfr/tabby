@@ -1,0 +1,51 @@
+name: Publish to AUR
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  aur:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key for AUR
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get tag version
+        id: get_version
+        run: |
+          echo "TAG=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Update PKGBUILD version
+        run: |
+          sed -i "s/^pkgver=.*/pkgver=${{ steps.get_version.outputs.TAG }}/" PKGBUILD
+          sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+
+      - name: Clone AUR repo
+        run: |
+          git clone ssh://aur@aur.archlinux.org/tabby-cli.git aur-repo
+
+      - name: Copy PKGBUILD
+        run: |
+          cp PKGBUILD aur-repo/
+
+      - name: Commit and push to AUR
+        run: |
+          cd aur-repo
+          makepkg --printsrcinfo > .SRCINFO
+          git add PKGBUILD .SRCINFO
+          git commit -m "Update to version ${{ steps.get_version.outputs.TAG }}" || echo "No changes to commit"
+          git branch -M master
+          git push
