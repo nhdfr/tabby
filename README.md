@@ -42,7 +42,16 @@
 
 ## Quick Start
 
+
 ### Installation
+
+#### From AUR (Arch Linux)
+
+```bash
+yay -S tabby-cli
+```
+
+#### Go (latest)
 
 ```bash
 go install github.com/nhdfr/tabby@latest
