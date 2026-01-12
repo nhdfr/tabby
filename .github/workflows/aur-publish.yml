@@ -18,34 +18,47 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
 
-      - name: Set up Git config
+      - name: Configure SSH for AUR
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          cat <<EOF >> ~/.ssh/config
+          Host aur.archlinux.org
+            User aur
+            IdentitiesOnly yes
+            PreferredAuthentications publickey
+          EOF
+          ssh-keyscan -t rsa,ecdsa,ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Verify SSH access
+        run: git ls-remote ssh://aur@aur.archlinux.org/tabby-cli.git
+
+      - name: Configure Git identity
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Get tag version
-        id: get_version
+      - name: Extract version from tag
+        id: version
         run: |
           echo "TAG=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
 
-      - name: Update PKGBUILD version
+      - name: Update PKGBUILD
         run: |
-          sed -i "s/^pkgver=.*/pkgver=${{ steps.get_version.outputs.TAG }}/" PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver=${{ steps.version.outputs.TAG }}/" PKGBUILD
           sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
 
-      - name: Clone AUR repo
+      - name: Clone AUR repository
         run: |
           git clone ssh://aur@aur.archlinux.org/tabby-cli.git aur-repo
 
-      - name: Copy PKGBUILD
-        run: |
-          cp PKGBUILD aur-repo/
-
-      - name: Commit and push to AUR
+      - name: Publish to AUR
         run: |
           cd aur-repo
+          cp ../PKGBUILD .
           makepkg --printsrcinfo > .SRCINFO
           git add PKGBUILD .SRCINFO
-          git commit -m "Update to version ${{ steps.get_version.outputs.TAG }}" || echo "No changes to commit"
+          git commit -m "Update to v${{ steps.version.outputs.TAG }}" || echo "No changes to commit"
           git branch -M master
           git push
