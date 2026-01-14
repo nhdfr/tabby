@@ -9,9 +9,18 @@ description: How to install Tabby on your system
 
 - Go 1.21 or higher
 
+
+## From AUR (Arch Linux)
+
+If you're on Arch Linux or a derivative, you can install Tabby from the AUR using yay:
+
+```bash
+yay -S tabby-cli
+```
+
 ## Using Go Install
 
-The easiest way to install Tabby is using `go install`:
+The easiest way to install Tabby on any platform with Go is:
 
 ```bash
 go install github.com/nhdfr/tabby@latest
@@ -23,6 +32,7 @@ Make sure your Go bin directory is in your PATH:
 export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
+
 ## Building from Source
 
 Clone the repository and build:
@@ -30,7 +40,7 @@ Clone the repository and build:
 ```bash
 git clone https://github.com/nhdfr/tabby.git
 cd tabby
-go build -o tabby .
+go build -o tabby
 ```
 
 ## Verify Installation
