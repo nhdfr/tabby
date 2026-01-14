@@ -20,6 +20,18 @@ export const linkItems: LinkItemType[] = [
     url: '/about',
     active: 'url',
   },
+  {
+    icon: <Icons.info />,
+    text: 'Docs',
+    url: '/docs',
+    active: 'url',
+  },
+  {
+    icon: <Icons.info />,
+    text: 'Playground',
+    url: '/playground',
+    active: 'url',
+  },
 ];
 
 export const postsPerPage = 5;
