@@ -16,7 +16,16 @@ Tabby is a powerful terminal-based HTTP testing tool with automated data generat
 
 ## Quick Start
 
+
 ### Installation
+
+#### From AUR (Arch Linux)
+
+```bash
+yay -S tabby-cli
+```
+
+#### Go (latest)
 
 ```bash
 go install github.com/nhdfr/tabby@latest
@@ -35,6 +44,17 @@ Make a POST request with JSON body:
 ```bash
 tabby post https://api.example.com/users -b '{"name": "{{name}}", "email": "{{email}}"}'
 ```
+
+
+## Playground
+
+Try Tabby directly in your browser with the [Playground](/playground)!
+
+- Test GET and POST requests interactively
+- Experiment with template placeholders
+- No installation required
+
+Perfect for demos, quick tests, and learning Tabby’s features.
 
 ## What's Next?
 
