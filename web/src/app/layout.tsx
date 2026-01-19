@@ -8,6 +8,7 @@ import { baseUrl } from '@/lib/constants';
 import { Body } from './layout.client';
 import { description as homeDescription } from './layout.config';
 import { Provider } from './provider';
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -44,6 +45,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
     >
       <Body>
         <Provider>{children}</Provider>
+        <Analytics />
       </Body>
     </html>
   );
