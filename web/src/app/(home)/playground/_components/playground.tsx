@@ -119,6 +119,70 @@ export function Playground() {
   const [bodyMode, setBodyMode] = useState<"form" | "raw">(
     defaultState.bodyMode,
   );
+
+  const handleBodyModeChange = (mode: "form" | "raw") => {
+    if (mode === "form" && bodyMode !== "form") {
+      let preprocessed = rawBody;
+      preprocessed = preprocessed.replace(
+        /(:\s*)(\{\{[^}]+\}\}(?:\.[0-9a-zA-Z_]+)*)/g,
+        (match, p1, p2) => {
+          const before = match.slice(0, match.indexOf(p2));
+          if (before.includes('"')) return match;
+          return `${p1}"${p2}"`;
+        },
+      );
+      try {
+        const obj = JSON.parse(preprocessed);
+        if (typeof obj === "object" && obj !== null && !Array.isArray(obj)) {
+          const newFields: FormField[] = Object.entries(obj).map(
+            ([key, value]) => {
+              let type = "string";
+              if (typeof value === "number") type = "number";
+              else if (typeof value === "boolean") type = "boolean";
+              else if (Array.isArray(value)) type = "array";
+              let valStr =
+                typeof value === "string" ? value : JSON.stringify(value);
+              const isPlaceholder =
+                typeof value === "string" && /^\{\{.*\}\}$/.test(value);
+              return {
+                id: crypto.randomUUID(),
+                key,
+                type,
+                value: valStr,
+                isCustom: !isPlaceholder,
+              };
+            },
+          );
+          setFormFields(newFields);
+        }
+      } catch {
+      }
+    } else if (mode === "raw" && bodyMode !== "raw") {
+      const obj: Record<string, any> = {};
+      formFields.forEach((f) => {
+        if (f.key.trim()) {
+          let val: any = f.value;
+          if (f.type === "number") {
+            if (!isNaN(Number(f.value))) val = Number(f.value);
+          } else if (f.type === "boolean") {
+            if (f.value === "true") val = true;
+            else if (f.value === "false") val = false;
+          } else if (f.type === "array") {
+            try {
+              val = JSON.parse(f.value);
+            } catch {
+              val = f.value;
+            }
+          }
+          obj[f.key] = val;
+        }
+      });
+      const jsonStr = JSON.stringify(obj, null, 2);
+      setRawBody(jsonStr);
+    }
+    setBodyMode(mode);
+  };
+
   const [loopEnabled, setLoopEnabled] = useState(defaultState.loopEnabled);
   const [loopCount, setLoopCount] = useState(defaultState.loopCount);
   const [interval, setInterval] = useState(defaultState.interval);
@@ -199,7 +263,8 @@ export function Playground() {
     const obj: Record<string, unknown> = {};
     formFields.forEach((f) => {
       if (f.key.trim()) {
-        const isPlaceholder = f.value.startsWith("{{") && f.value.endsWith("}}");
+        const isPlaceholder =
+          f.value.startsWith("{{") && f.value.endsWith("}}");
         if (f.type === "number") {
           if (isPlaceholder) {
             obj[f.key] = f.value;
@@ -217,12 +282,13 @@ export function Playground() {
         }
       }
     });
-    
+
     const jsonStr = JSON.stringify(obj, null, 2);
     let result = jsonStr;
     formFields.forEach((f) => {
       if (f.key.trim() && (f.type === "number" || f.type === "boolean")) {
-        const isPlaceholder = f.value.startsWith("{{") && f.value.endsWith("}}");
+        const isPlaceholder =
+          f.value.startsWith("{{") && f.value.endsWith("}}");
         if (isPlaceholder) {
           result = result.replace(`"${f.value}"`, f.value);
         }
@@ -547,14 +613,14 @@ ${effectiveBody || "{}"}
                     <Badge
                       variant={bodyMode === "form" ? "default" : "outline"}
                       className="text-[10px] cursor-pointer"
-                      onClick={() => setBodyMode("form")}
+                      onClick={() => handleBodyModeChange("form")}
                     >
                       Form
                     </Badge>
                     <Badge
                       variant={bodyMode === "raw" ? "default" : "outline"}
                       className="text-[10px] cursor-pointer"
-                      onClick={() => setBodyMode("raw")}
+                      onClick={() => handleBodyModeChange("raw")}
                     >
                       Raw
                     </Badge>
